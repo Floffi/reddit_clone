@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+:root {
+  --header-height: 4rem;
+  --yellow: #fbc94d;
+  --blue: #6cc0e5;
+  --dark-blue: #2e87fc;
+  --red: #fb4f4f;
+  --grey: #edeff1;
+  --dark-grey: #cccccc;
+  --black: #2b2b2b;
+}

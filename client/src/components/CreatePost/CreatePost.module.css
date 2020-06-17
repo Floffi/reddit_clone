@@ -1,0 +1,14 @@
+.create__post {
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--dark-grey);
+  border-radius: 3px;
+}
+
+.input:hover {
+  border: 1px solid var(--dark-blue);
+}

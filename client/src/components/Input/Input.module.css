@@ -1,0 +1,56 @@
+.container {
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
+  border: 1px solid var(--grey);
+  overflow: hidden;
+}
+
+.container__error {
+  border: 1px solid var(--red);
+}
+
+.icon__container {
+  padding-left: 0.5rem;
+}
+
+.input__container {
+  flex: 1;
+  position: relative;
+}
+
+.input {
+  font-size: 1rem;
+  padding: 1rem 0.5rem;
+  width: 100%;
+  border: none;
+  outline: none;
+}
+
+.input:focus ~ .label,
+.input:not(:placeholder-shown) ~ .label {
+  top: 0.1rem;
+  font-size: 0.8rem;
+}
+
+.container:focus-within {
+  border: 1px solid var(--blue);
+}
+
+.label {
+  position: absolute;
+  left: 0.5rem;
+  top: 1rem;
+  transition: top 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.icon {
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+.error {
+  font-size: 0.8rem;
+  color: var(--red);
+}

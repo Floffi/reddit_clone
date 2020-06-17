@@ -1,0 +1,13 @@
+.button {
+  font-weight: 700;
+  padding: 0.5rem 0.8rem;
+  text-transform: uppercase;
+  background: var(--blue);
+  color: white;
+  border-radius: 3px;
+  border: none;
+}
+
+.button:hover {
+  cursor: pointer;
+}

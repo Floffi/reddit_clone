@@ -1,0 +1,36 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  min-height: var(--header-height);
+  padding: 0 2rem;
+  border-bottom: 1px solid var(--dark-grey);
+  background: white;
+  z-index: 10;
+}
+
+.logo__link {
+  display: flex;
+  font-size: 2rem;
+  color: var(--blue);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.icon:hover {
+  cursor: pointer;
+}
+
+.left > *:not(:last-child) {
+  margin-right: 1rem;
+}
+
+.nav > *:not(:last-child) {
+  margin-right: 1rem;
+}

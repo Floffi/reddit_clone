@@ -1,0 +1,23 @@
+/* Custom Quill CSS */
+.quill {
+  border-radius: 3px;
+  border: 1px solid var(--dark-grey);
+  overflow: hidden;
+}
+
+.quill:focus-within {
+  border: 1px solid var(--dark-blue);
+}
+
+.ql-editor {
+  max-height: 20rem;
+}
+
+.ql-toolbar.ql-snow {
+  border: none;
+  border-bottom: 1px solid var(--dark-grey);
+}
+
+.ql-container.ql-snow {
+  border: none;
+}

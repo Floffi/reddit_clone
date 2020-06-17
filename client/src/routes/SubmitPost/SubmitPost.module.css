@@ -1,0 +1,42 @@
+.submit__post {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.form > *:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.form {
+  width: 50vw;
+}
+
+.title__container {
+  position: relative;
+}
+
+.title {
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  padding: 1rem;
+  width: 100%;
+  border: 1px solid var(--dark-grey);
+  border-radius: 3px;
+  padding-right: 4rem;
+  resize: none;
+  outline: none;
+}
+
+.title:focus {
+  border: 1px solid var(--dark-blue);
+}
+
+.title__length {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 0.8rem;
+}

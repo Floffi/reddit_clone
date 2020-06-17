@@ -1,0 +1,42 @@
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.overlay:hover {
+  cursor: pointer;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background: white;
+  z-index: 110;
+  border-radius: 3px;
+}
+
+.icon {
+  align-self: flex-end;
+  margin-bottom: 1rem;
+}
+
+.icon:hover {
+  cursor: pointer;
+}
