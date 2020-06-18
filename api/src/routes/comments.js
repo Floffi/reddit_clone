@@ -9,6 +9,9 @@ const router = Router();
 router.get('/post/:post_id', post, comments.readPostComments);
 router.use(protect);
 router.route('/').post(comments.create);
-router.route('/:comment_id').patch(comment, comments.update).delete(comment, comments.delete);
+router
+  .route('/:comment_id')
+  .patch(comment, comments.update)
+  .delete(comment, comments.delete);
 
 module.exports = router;

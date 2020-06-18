@@ -9,7 +9,6 @@
   padding: 0 2rem;
   border-bottom: 1px solid var(--dark-grey);
   background: white;
-  z-index: 10;
 }
 
 .logo__link {

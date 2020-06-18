@@ -9,6 +9,7 @@ import LoginModal from '../LoginModal';
 import CommunityModal from '../CommunityModal';
 import Home from '../../routes/Home';
 import SubmitPost from '../../routes/SubmitPost';
+import Post from '../../routes/Post';
 import refreshToken from '../../utilities/refreshToken';
 import { loadSession } from '../../redux/auth';
 
@@ -48,6 +49,11 @@ const App = () => {
             exact
             path={['/submit', '/c/:community/submit']}
             component={SubmitPost}
+          />
+          <Route
+            exact
+            path='/c/:community/comments/:post_id'
+            component={Post}
           />
         </Switch>
       </Layout>

@@ -7,9 +7,12 @@ const GET_COMMUNITY_POSTS_FAILURE = 'GET_COMMUNITY_POSTS_FAILURE';
 const CREATE_POST_REQUEST = 'CREATE_POST_REQUEST';
 const CREATE_POST_SUCCESS = 'CREATE_POST_SUCCESS';
 const CREATE_POST_FAILURE = 'CREATE_POST_FAILURE';
-const VOTE_REQUEST = 'VOTE_REQUEST';
-const VOTE_SUCCESS = 'VOTE_SUCCESS';
-const VOTE_FAILURE = 'VOTE_FAILURE';
+const VOTE_POST_REQUEST = 'VOTE_POST_REQUEST';
+const VOTE_POST_SUCCESS = 'VOTE_POST_SUCCESS';
+const VOTE_POST_FAILURE = 'VOTE_POST_FAILURE';
+const GET_POST_REQUEST = 'GET_POST_REQUEST';
+const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
+const GET_POST_FAILURE = 'GET_POST_FAILURE';
 
 const initialState = {
   items: [],
@@ -52,12 +55,12 @@ const community = (state = initialState, action) => {
         ...state,
         isCreating: false,
       };
-    case VOTE_REQUEST:
+    case VOTE_POST_REQUEST:
       return {
         ...state,
         isVoting: true,
       };
-    case VOTE_SUCCESS:
+    case VOTE_POST_SUCCESS:
       return {
         ...state,
         isVoting: false,
@@ -91,7 +94,7 @@ const community = (state = initialState, action) => {
           return item;
         }),
       };
-    case VOTE_FAILURE:
+    case VOTE_POST_FAILURE:
       return {
         ...state,
         isVoting: false,
@@ -106,6 +109,22 @@ const discussion = (
   action
 ) => {
   switch (action.type) {
+    case GET_POST_REQUEST:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case GET_POST_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        item: action.post,
+      };
+    case GET_POST_FAILURE:
+      return {
+        ...state,
+        isFetching: false,
+      };
     default:
       return state;
   }
@@ -145,17 +164,31 @@ const createPostFailure = (error) => ({
   error,
 });
 
-const voteRequest = () => ({
-  type: VOTE_REQUEST,
+const votePostRequest = () => ({
+  type: VOTE_POST_REQUEST,
 });
 
-const voteSuccess = (data) => ({
-  type: VOTE_SUCCESS,
+const votePostSuccess = (data) => ({
+  type: VOTE_POST_SUCCESS,
   data,
 });
 
-const voteFailure = (error) => ({
-  type: VOTE_FAILURE,
+const votePostFailure = (error) => ({
+  type: VOTE_POST_FAILURE,
+  error,
+});
+
+const getPostRequest = () => ({
+  type: GET_POST_REQUEST,
+});
+
+const getPostSuccess = (post) => ({
+  type: GET_POST_SUCCESS,
+  post,
+});
+
+const getPostFailure = (error) => ({
+  type: GET_POST_FAILURE,
   error,
 });
 
@@ -214,12 +247,12 @@ export const createPost = (inputsData) => async (dispatch) => {
   }
 };
 
-export const vote = (postId, direction) => async (dispatch) => {
-  dispatch(voteRequest());
+export const votePost = (postId, direction) => async (dispatch) => {
+  dispatch(votePostRequest());
   try {
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
-      return dispatch(voteFailure('Access token not found'));
+      return dispatch(votePostFailure('Access token not found'));
     }
     const response = await fetch(`/api/posts/vote/${postId}`, {
       method: 'POST',
@@ -232,15 +265,38 @@ export const vote = (postId, direction) => async (dispatch) => {
     const { status, data, error } = await response.json();
     if (response.ok) {
       if (status === 'success') {
-        dispatch(voteSuccess(data));
+        dispatch(votePostSuccess(data));
       } else {
-        dispatch(voteFailure(error));
+        dispatch(votePostFailure(error));
       }
     } else {
-      dispatch(voteFailure());
+      dispatch(votePostFailure());
     }
   } catch (error) {
-    console.log('Error', error);
-    dispatch(voteFailure(error));
+    dispatch(votePostFailure(error));
+  }
+};
+
+export const getPost = (postId) => async (dispatch) => {
+  dispatch(getPostRequest());
+  try {
+    const accessToken = localStorage.getItem('accessToken');
+    const opts = {};
+    if (accessToken) {
+      opts.headers = {
+        authorization: `Bearer ${accessToken}`,
+      };
+    }
+    const response = await fetch(`/api/posts/${postId}`, opts);
+    const { status, data, error } = await response.json();
+    if (response.ok) {
+      if (status === 'success') {
+        dispatch(getPostSuccess(data.post));
+      } else {
+        dispatch(getPostFailure(error));
+      }
+    }
+  } catch (error) {
+    dispatch(getPostFailure(error));
   }
 };

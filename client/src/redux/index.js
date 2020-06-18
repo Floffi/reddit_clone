@@ -4,6 +4,7 @@ import auth from './auth';
 import modals from './modals';
 import communities from './communities';
 import posts from './posts';
+import comments from './comments';
 import { LOGOUT_SUCCESS } from './auth';
 
 const resetEnhancer = (rootReducer) => (state, action) => {
@@ -22,6 +23,7 @@ const reducer = combineReducers({
   modals,
   communities,
   posts,
+  comments,
 });
 
 const store = createStore(

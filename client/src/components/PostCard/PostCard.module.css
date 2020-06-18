@@ -1,8 +1,10 @@
 .post__card {
   display: flex;
   padding: 1rem;
+  color: var(--black);
   border: 1px solid var(--dark-grey);
   border-radius: 3px;
+  text-decoration: none;
 }
 
 .post__card:hover {
@@ -48,6 +50,7 @@
 
 .footer {
   display: flex;
+  margin-left: -0.5rem;
 }
 
 .footer > *:not(:last-child) {
@@ -126,4 +129,8 @@
 
 .downvoted {
   color: var(--dark-blue);
+}
+
+.comments {
+  margin-left: 0.5rem;
 }

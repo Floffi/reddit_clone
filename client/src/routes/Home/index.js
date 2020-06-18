@@ -30,6 +30,7 @@ const Home = () => {
           text={post.text}
           upvotes={post.upvotes}
           voteDirection={post.vote}
+          comments={post.comments}
           createdAt={post.created_at}
         />
       ))}

@@ -30,9 +30,61 @@ exports.create = catchAsync(async (req, res, _next) => {
 
 exports.readOne = catchAsync(async (req, res, _next) => {
   const { post_id } = req.params;
-  const results = await database('posts').select().where('id', post_id);
-  if (!results.length) {
-    throw new AppError('Invalid Post ID', 422);
+  const { authorization } = req.headers;
+  let results;
+  let query = database('posts')
+    .select(
+      'posts.*',
+      'communities.name as community_name',
+      'users.name as user_name',
+      'x.upvotes',
+      'comm.count as comments'
+    )
+    .where('posts.id', post_id)
+    .leftJoin('communities', 'posts.community_id', 'communities.id')
+    .leftJoin('users', 'posts.user_id', 'users.id')
+    .leftJoin(
+      database('post_votes')
+        .select(
+          'post_id',
+          database.raw(
+            'SUM(CASE WHEN direction THEN 1 ELSE -1 END)::int AS upvotes'
+          )
+        )
+        .groupBy('post_id')
+        .as('x'),
+      'x.post_id',
+      'posts.id'
+    )
+    .leftJoin(
+      database('comments')
+        .select('post_id', database.raw('COUNT(*)::int'))
+        .groupBy('post_id')
+        .as('comm'),
+      'comm.post_id',
+      'posts.id'
+    );
+
+  if (authorization) {
+    const accessToken = authorization.split(' ')[1];
+    if (accessToken) {
+      const { userId } = await jwt.verify(
+        accessToken,
+        process.env.ACCESS_TOKEN_SECRET
+      );
+      results = await query
+        .leftJoin(
+          database('post_votes')
+            .select('post_id', 'direction')
+            .where('user_id', userId)
+            .as('y'),
+          'posts.id',
+          'y.post_id'
+        )
+        .select('y.direction as vote');
+    }
+  } else {
+    results = await query;
   }
   res.json({
     status: 'success',
@@ -45,11 +97,6 @@ exports.readOne = catchAsync(async (req, res, _next) => {
 exports.read = catchAsync(async (req, res, _next) => {
   const { community_name } = req.params;
   const { authorization } = req.headers;
-  const accessToken = authorization.split(' ')[1];
-  const { userId } = await jwt.verify(
-    accessToken,
-    process.env.ACCESS_TOKEN_SECRET
-  );
   let results;
   let query = database('posts')
     .select(
@@ -57,7 +104,7 @@ exports.read = catchAsync(async (req, res, _next) => {
       'communities.name as community_name',
       'users.name as user_name',
       'x.upvotes',
-      'y.direction as vote'
+      'comm.count as comments'
     )
     .leftJoin('communities', 'posts.community_id', 'communities.id')
     .leftJoin('users', 'posts.user_id', 'users.id')
@@ -73,6 +120,14 @@ exports.read = catchAsync(async (req, res, _next) => {
         .as('x'),
       'x.post_id',
       'posts.id'
+    )
+    .leftJoin(
+      database('comments')
+        .select('post_id', database.raw('COUNT(*)::int'))
+        .groupBy('post_id')
+        .as('comm'),
+      'comm.post_id',
+      'posts.id'
     );
 
   if (community_name) {
@@ -87,20 +142,27 @@ exports.read = catchAsync(async (req, res, _next) => {
     query = query.where('community_id', community.id);
   }
 
-  if (authorization && accessToken && userId) {
-    results = await query.leftJoin(
-      database('post_votes')
-        .select('post_id', 'direction')
-        .where('user_id', userId)
-        .as('y'),
-      'posts.id',
-      'y.post_id'
-    );
-    console.log('MOO');
+  if (authorization) {
+    const accessToken = authorization.split(' ')[1];
+    if (accessToken) {
+      const { userId } = await jwt.verify(
+        accessToken,
+        process.env.ACCESS_TOKEN_SECRET
+      );
+      results = await query
+        .leftJoin(
+          database('post_votes')
+            .select('post_id', 'direction')
+            .where('user_id', userId)
+            .as('y'),
+          'posts.id',
+          'y.post_id'
+        )
+        .select('y.direction as vote');
+    }
   } else {
     results = await query;
   }
-  console.log('Results', results);
 
   res.json({
     status: 'success',
