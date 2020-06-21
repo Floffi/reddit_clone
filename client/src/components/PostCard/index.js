@@ -7,6 +7,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './PostCard.module.css';
 import { votePost } from '../../redux/posts';
+import { openRegister } from '../../redux/modals';
 
 const PostCard = ({
   id,
@@ -43,6 +44,8 @@ const PostCard = ({
               event.stopPropagation();
               if (isAuthenticated) {
                 dispatch(votePost(id, true));
+              } else {
+                dispatch(openRegister());
               }
             }}
           />
@@ -57,6 +60,8 @@ const PostCard = ({
               event.stopPropagation();
               if (isAuthenticated) {
                 dispatch(votePost(id, false));
+              } else {
+                dispatch(openRegister());
               }
             }}
           />
