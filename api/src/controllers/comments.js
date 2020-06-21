@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const catchAsync = require('../utilities/catchAsync');
 const database = require('../database');
 const AppError = require('../utilities/appError');
@@ -16,7 +17,9 @@ exports.create = catchAsync(async (req, res, _next) => {
 });
 
 exports.readPostComments = catchAsync(async (req, res, _next) => {
-  const results = await database('comments')
+  const { authorization } = req.headers;
+  let results;
+  let query = database('comments')
     .select('comments.*', 'users.name as user_name', 'x.upvotes')
     .where('post_id', req.params.post_id)
     .leftJoin('users', 'comments.user_id', 'users.id')
@@ -33,6 +36,28 @@ exports.readPostComments = catchAsync(async (req, res, _next) => {
       'x.comment_id',
       'comments.id'
     );
+
+  if (authorization) {
+    const accessToken = authorization.split(' ')[1];
+    if (accessToken) {
+      const { userId } = await jwt.verify(
+        accessToken,
+        process.env.ACCESS_TOKEN_SECRET
+      );
+      results = await query
+        .leftJoin(
+          database('comment_votes')
+            .select('comment_id', 'direction')
+            .where('user_id', userId)
+            .as('y'),
+          'comments.id',
+          'y.comment_id'
+        )
+        .select('y.direction as vote');
+    }
+  } else {
+    results = await query;
+  }
   res.json({
     status: 'success',
     data: {
@@ -60,13 +85,15 @@ exports.vote = catchAsync(async (req, res, _next) => {
     const vote = voteResult[0];
     // If the user already voted in the same direction before, remove the vote.
     if (vote.direction === direction) {
-      await database('comment_votes')
+      const results = await database('comment_votes')
         .del()
-        .where({ comment_id, user_id: req.user.id });
+        .where({ comment_id, user_id: req.user.id })
+        .returning('*');
       res.json({
         status: 'success',
         data: {
           action: 'delete',
+          vote: results[0],
         },
       });
     } else {

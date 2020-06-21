@@ -122,6 +122,7 @@ export const register = (inputData, setErrors, closeModal) => async (
         dispatch(registerSuccess(data.session));
         localStorage.setItem('accessToken', data.accessToken);
         closeModal();
+        window.location.reload();
       } else {
         dispatch(registerFailure());
         setErrors((prevErr) => ({
@@ -153,7 +154,7 @@ export const login = (inputData, setErrors, closeModal) => async (dispatch) => {
         dispatch(loginSuccess(data.session));
         localStorage.setItem('accessToken', data.accessToken);
         closeModal();
-        setErrors({});
+        window.location.reload();
       } else {
         dispatch(loginFailure(error));
         setErrors(error);
@@ -176,6 +177,7 @@ export const logout = () => async (dispatch) => {
     if (response.ok) {
       if (status === 'success') {
         dispatch(logoutSuccess());
+        window.location.reload();
         localStorage.removeItem('accessToken');
       } else {
         dispatch(logoutFailure(error));

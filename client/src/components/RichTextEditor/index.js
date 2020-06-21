@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
+import './RichTextEditor.css';
 
-const RichTextEditor = ({ onChange, value, placeholder }) => {
+const RichTextEditor = ({ onChange, value, placeholder, error }) => {
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],

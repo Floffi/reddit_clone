@@ -2,6 +2,8 @@ import validator from 'validator';
 
 const isString = (data) => typeof data === 'string' && data.length > 0;
 
+const isObject = (data) => typeof data === 'object' && data !== null;
+
 export const formValidation = {
   register: (data) => {
     const errors = {};
@@ -72,6 +74,37 @@ export const formValidation = {
     }
     if (validator.isEmpty(data.name)) {
       errors.name = 'Name is required';
+    }
+    return {
+      isValid: Object.keys(errors).length === 0,
+      errors,
+    };
+  },
+  post: (data) => {
+    const errors = {};
+    if (
+      !isObject(data.selectedOption) ||
+      !data.selectedOption.hasOwnProperty('value') ||
+      !data.selectedOption.hasOwnProperty('label')
+    ) {
+      errors.selectedOption = 'Community is required';
+    }
+    if (!validator.isLength(data.title, { min: 2, max: 300 })) {
+      errors.title = 'Title must have between 2 and 300 characters';
+    }
+    if (validator.isEmpty(data.title)) {
+      errors.title = 'Title is required';
+    }
+    return {
+      isValid: Object.keys(errors).length === 0,
+      errors,
+    };
+  },
+  comment: (data) => {
+    const errors = {};
+    data.text = isString(data.text) ? data.text : '';
+    if (validator.isEmpty(data.text)) {
+      errors.text = 'Text is required';
     }
     return {
       isValid: Object.keys(errors).length === 0,

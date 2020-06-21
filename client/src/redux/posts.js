@@ -125,6 +125,51 @@ const discussion = (
         ...state,
         isFetching: false,
       };
+    case VOTE_POST_REQUEST:
+      return {
+        ...state,
+        isVoting: true,
+      };
+    case VOTE_POST_SUCCESS:
+      if (state.item && state.item.id === action.data.vote.post_id) {
+        let itemCopy = Object.assign({}, state.item);
+        const { action: voteAction, vote } = action.data;
+        if (voteAction === 'create') {
+          itemCopy.vote = vote.direction;
+          itemCopy.upvotes = itemCopy.upvotes ? itemCopy.upvotes : 0;
+          itemCopy.upvotes = vote.direction
+            ? itemCopy.upvotes + 1
+            : itemCopy.upvotes - 1;
+        }
+        if (voteAction === 'update') {
+          itemCopy.vote = vote.direction;
+          itemCopy.upvotes = vote.direction
+            ? itemCopy.upvotes + 2
+            : itemCopy.upvotes - 2;
+        }
+        if (voteAction === 'delete') {
+          const { vote: omit, ...rest } = itemCopy;
+          itemCopy = rest;
+          itemCopy.upvotes = vote.direction
+            ? itemCopy.upvotes - 1
+            : itemCopy.upvotes + 1;
+        }
+        return {
+          ...state,
+          isVoting: false,
+          item: itemCopy,
+        };
+      } else {
+        return {
+          ...state,
+          isVoting: false,
+        };
+      }
+    case VOTE_POST_FAILURE:
+      return {
+        ...state,
+        isVoting: false,
+      };
     default:
       return state;
   }
@@ -219,7 +264,7 @@ export const getCommunityPosts = (communityName) => async (dispatch) => {
   }
 };
 
-export const createPost = (inputsData) => async (dispatch) => {
+export const createPost = (inputsData, redirect) => async (dispatch) => {
   dispatch(createPostRequest());
   try {
     const accessToken = localStorage.getItem('accessToken');
@@ -238,6 +283,7 @@ export const createPost = (inputsData) => async (dispatch) => {
     if (response.ok) {
       if (status === 'success') {
         dispatch(createPostSuccess(data.post));
+        redirect();
       } else {
         dispatch(createPostFailure(error));
       }

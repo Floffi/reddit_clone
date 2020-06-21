@@ -3,7 +3,13 @@
   flex-direction: column;
 }
 
-.form > button {
+.footer {
+  display: flex;
+  justify-content: space-between;
   margin-top: 0.5rem;
-  align-self: flex-end;
+}
+
+.error {
+  font-size: 0.8rem;
+  color: var(--red);
 }

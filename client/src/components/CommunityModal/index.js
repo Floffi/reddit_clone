@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { FaUser, FaLock } from 'react-icons/fa';
+import { FaCampground } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './CommunityModal.module.css';
 import Modal from '../Modal';
@@ -66,7 +66,7 @@ const CommunityModal = () => {
           onBlur={handleBlur}
           error={errors.name}
         >
-          <FaUser />
+          <FaCampground />
         </Input>
         <Button type='submit'>Add Community</Button>
       </form>

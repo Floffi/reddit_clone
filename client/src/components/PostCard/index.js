@@ -18,7 +18,7 @@ const PostCard = ({
   voteDirection,
   comments,
   createdAt,
-  mode = false,
+  mode = true,
 }) => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -27,11 +27,11 @@ const PostCard = ({
   return (
     <div
       onClick={() => {
-        if (!mode) {
+        if (mode) {
           history.push(`/c/${communityName}/comments/${id}`);
         }
       }}
-      className={styles.post__card}
+      className={`${styles.post__card} ${mode && styles.post__card__mode}`}
     >
       <div className={styles.aside}>
         <div className={styles.arrows}>
@@ -46,7 +46,7 @@ const PostCard = ({
               }
             }}
           />
-          <span className={styles.votes}>{upvotes}</span>
+          <span className={styles.votes}>{upvotes === null ? 0 : upvotes}</span>
           <GoArrowDown
             className={`${styles.icon} ${styles.downvote} ${
               typeof voteDirection === 'boolean' &&
@@ -73,7 +73,11 @@ const PostCard = ({
           </Link>
           <div className={styles.author}>
             <span>Posted by</span>
-            <Link to='/' className={styles.author__link}>
+            <Link
+              onClick={(event) => event.stopPropagation()}
+              to={`/u/${userName}`}
+              className={styles.author__link}
+            >
               u/{userName}
             </Link>
           </div>
@@ -81,13 +85,19 @@ const PostCard = ({
         </div>
         <div className={styles.content}>
           <span className={styles.title}>{title}</span>
-          <span dangerouslySetInnerHTML={{ __html: text }} />
+          <div dangerouslySetInnerHTML={{ __html: text }} />
         </div>
         <div className={styles.footer}>
-          <button className={styles.button}>
+          <Link
+            onClick={(event) => event.stopPropagation()}
+            to={`/c/${communityName}/comments/${id}/#comments`}
+            className={styles.button}
+          >
             <MdChatBubble />
-            <span className={styles.comments}>{comments} Comments</span>
-          </button>
+            <span className={styles.comments}>
+              {comments === null ? 0 : comments} Comments
+            </span>
+          </Link>
         </div>
       </div>
     </div>
@@ -100,8 +110,8 @@ PostCard.propTypes = {
   userName: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   upvotes: PropTypes.number.isRequired,
-  comments: PropTypes.number.isRequired,
   createdAt: PropTypes.string.isRequired,
+  comments: PropTypes.number,
   voteDirection: PropTypes.bool,
   text: PropTypes.string,
 };

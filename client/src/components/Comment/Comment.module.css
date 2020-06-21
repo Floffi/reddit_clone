@@ -21,15 +21,18 @@
 .arrows {
   display: flex;
   flex-direction: column;
+  margin-bottom: 0.5rem;
 }
 
 .icon {
   font-size: 1.5rem;
   color: var(--black);
+  border-radius: 3px;
 }
 
 .icon:hover {
   cursor: pointer;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .vertical__line {
@@ -40,6 +43,7 @@
 
 .vertical__line:hover {
   cursor: pointer;
+  background: var(--dark-blue);
 }
 
 .header {
@@ -58,8 +62,6 @@
 }
 
 .footer {
-  margin-left: -0.3rem;
-  margin-bottom: -0.3rem;
   font-size: 0.8rem;
 }
 
@@ -67,7 +69,7 @@
   display: flex;
   align-items: center;
   font-size: 0.8rem;
-  padding: 0.3rem;
+  padding: 0.3rem 0.2rem;
   border-radius: 3px;
   border: none;
   background: none;
@@ -81,4 +83,20 @@
 .button__text {
   font-weight: 700;
   margin-left: 0.1rem;
+}
+
+.upvoted {
+  color: var(--red);
+}
+
+.downvoted {
+  color: var(--dark-blue);
+}
+
+.upvote:hover {
+  color: var(--red);
+}
+
+.downvote:hover {
+  color: var(--dark-blue);
 }

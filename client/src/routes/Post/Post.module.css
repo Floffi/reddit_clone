@@ -1,11 +1,18 @@
 .post {
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 1rem;
+  margin: 2rem;
+  border: 1px solid var(--dark-grey);
+  border-radius: 3px;
 }
 
 .post > *:not(:last-child) {
   margin-bottom: 1rem;
+}
+
+.comments {
+  padding: 0rem;
 }
 
 .comments > *:not(:last-child) {

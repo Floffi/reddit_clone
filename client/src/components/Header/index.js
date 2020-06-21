@@ -10,7 +10,7 @@ import { logout } from '../../redux/auth';
 
 const Header = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated, isFetching } = useSelector((state) => state.auth);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const nav = isAuthenticated ? (
     <Button onClick={() => dispatch(logout())}>Logout</Button>
@@ -32,7 +32,7 @@ const Header = () => {
           <FaReddit />
         </Link>
       </div>
-      <nav className={styles.nav}>{!isFetching && nav}</nav>
+      <nav className={styles.nav}>{nav}</nav>
     </header>
   );
 };

@@ -9,6 +9,7 @@ const router = Router();
 router.get('/post/:post_id', post, comments.readPostComments);
 router.use(protect);
 router.route('/').post(comments.create);
+router.post('/vote/:comment_id', comments.vote);
 router
   .route('/:comment_id')
   .patch(comment, comments.update)
